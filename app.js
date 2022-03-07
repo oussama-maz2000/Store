@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const connectDB = require("./Models/connection");
+const route = require("./Controllers/userAuthentication");
 app.use(express.json());
 const start = async () => {
   try {
@@ -11,4 +12,9 @@ const start = async () => {
   }
 };
 
+app.use("/user", route);
+
 start();
+app.get("/", (req, res) => {
+  res.send("hello world");
+});

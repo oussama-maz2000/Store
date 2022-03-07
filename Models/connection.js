@@ -1,4 +1,5 @@
 require("dotenv").config();
+const res = require("express/lib/response");
 const mongoose = require("mongoose");
 
 const db = process.env.DB;
@@ -8,6 +9,7 @@ const connection = mongoose
     console.log("connect with db");
   })
   .catch((err) => {
-    console.log("failed");
+    console.log("you lost connection or you have problem with database");
+    res.send("you lost connection or you have problem with database");
   });
-module.exports=connection
+module.exports = connection;
