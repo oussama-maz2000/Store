@@ -28,10 +28,11 @@ route.post("/signup", async (req, res) => {
     });
     //save it in db
     await user.save();
-    res.send("thank you for registration");
+    return res.send("thank you for registration");
   } catch (err) {
     console.log(err.message);
-    res.send(err.message);
+    return res.send(err.message);
+    process.exit(1);
   }
 });
 
@@ -45,19 +46,20 @@ route.post("/login", async (req, res) => {
     !cmp && res.send("wrong password try again please ").status(400);
     // create token
 
-    const access_token = jwt.sign(
+   /*   const access_token = jwt.sign(
       {
         id: user._id,
         isAdmin: user.isadmin,
       },
       process.env.SECRET_JWT
-    );
+    );  */
     const { password, ...others } = user._doc;
-
-// send data wihtout password
-    res.send({...others,access_token});
+//console.log(access_token);
+    // send data wihtout password
+    return res.send("fuck you");
   } catch (err) {
-    res.send(err).status(500);
+    return res.send(err).status(500);
+    process.exit(1);
   }
 });
 module.exports = route;
