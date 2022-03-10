@@ -3,10 +3,10 @@ const hashPassword = require("../../Controllers/validation/userValid");
 const userModel = require("../../Models/userSchema");
 
 const {
-  verify_token,
+
   verify_and_authorizate,
 } = require("../../Controllers/validation/verify");
-route.put("/:id", verify_and_authorizate, async (req, res) => {
+/* route.put("/:id", verify_and_authorizate, async (req, res) => {
   if (req.body.password) {
     hashPassword(req.body.password);
   }
@@ -23,4 +23,4 @@ route.put("/:id", verify_and_authorizate, async (req, res) => {
     res.status(401).json(error);
   }
 });
-module.exports=route
+module.exports=route */
