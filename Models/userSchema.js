@@ -23,12 +23,25 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    token:{
-      type:String,
-      default:''
-    }
+    token: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );
+const storeSchem = new mongoose.Schema(
+  {
+    id: { type: Number },
+    title: { type: String, required: true },
+    price: { type: Number, required: true },
+    category: { type: String },
+    description: { type: String },
+    image: { type: String },
+  },
+  { timestamps: true }
+);
+
 const userModel = mongoose.model("usermodel", userSchema);
-module.exports = userModel;
+const storeModel = mongoose.model("storemodel", storeSchem);
+module.exports = { userModel, storeModel };
