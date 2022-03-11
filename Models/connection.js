@@ -4,7 +4,10 @@ const mongoose = require("mongoose");
 
 const db = process.env.DB;
 const connection = mongoose
-  .connect(db)
+  .connect(db,  {
+    useNewUrlParser: true,
+   
+  } )
   .then((result) => {
     console.log("connect with db");
   })
