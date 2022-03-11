@@ -13,6 +13,6 @@ const connection = mongoose
   })
   .catch((err) => {
     console.log("you lost connection or you have problem with database");
-    res.send("you lost connection or you have problem with database");
+    res.status(401).send("you lost connection or you have problem with database");
   });
 module.exports = connection;
