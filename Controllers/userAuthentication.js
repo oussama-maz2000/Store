@@ -1,7 +1,8 @@
 require("dotenv").config();
 const route = require("express").Router();
-const userModel = require("../Models/userSchema");
+const {userModel} = require("../Models/userSchema");
 const { verify_token } = require("./validation/verify");
+const { add_Token } = require("../helpers/addToken");
 const jwt = require("jsonwebtoken");
 const {
   check_log_in,
@@ -44,28 +45,14 @@ route.post("/login", async (req, res) => {
     let { error } = await check_log_in(req.body);
     if (error) return res.status(401).send("something wrong");
     let cmp = await compare(req.body.password, user.password);
-    !cmp &&
-      res.status(401).send("wrong password try again please ").status(400);
+    if (!cmp) return res.status(401).send("wrong password try again please ");
+
     // create token
-    if (user.isadmin == true) {
-      var access_token = jwt.sign(
-        {
-          id: user._id,
-          isAdmin: user.isadmin,
-        },
-        process.env.SECRET_JWT
-      );
-      const query = { username: user.username && isadmin};
-      const newdata = { token: "mazeghrane" };
-      //userModel.updateOne({username:user.username},{$set:{token:access_token}})
-      let dat=await userModel.findOneAndUpdate(query, newdata, {
-        new: true,
-      });
-      console.log(dat);
+    if (user.isadmin == true && !user.token) {
+      add_Token(user);
     }
 
-    // send data wihtout password
-    return res.status(200).send("fuck you");
+    return res.status(200).send(`welcome  🙌  ${user.username}`);
   } catch (err) {
     return res.status(500).send(err.message);
   }
