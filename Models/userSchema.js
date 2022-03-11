@@ -30,18 +30,5 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-const storeSchem = new mongoose.Schema(
-  {
-    id: { type: Number },
-    title: { type: String, required: true },
-    price: { type: Number, required: true },
-    category: { type: String },
-    description: { type: String },
-    image: { type: String },
-  },
-  { timestamps: true }
-);
-
 const userModel = mongoose.model("usermodel", userSchema);
-const storeModel = mongoose.model("storemodel", storeSchem);
-module.exports = { userModel, storeModel };
+module.exports = { userModel };
