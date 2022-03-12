@@ -16,7 +16,7 @@ route.post("/data", async (req, res) => {
     await new_data.save();
     return res.status(201).send("good");
   } catch (err) {
-    console.log(err.message);
+    res.status(401).send(err.message)
   }
 });
 module.exports = route;
