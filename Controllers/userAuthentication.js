@@ -1,6 +1,6 @@
 require("dotenv").config();
 const route = require("express").Router();
-const {userModel} = require("../Models/userSchema");
+const { userModel } = require("../Models/userSchema");
 const { verify_token } = require("./validation/verify");
 const { add_Token } = require("../helpers/addToken");
 const jwt = require("jsonwebtoken");
@@ -48,17 +48,18 @@ route.post("/login", async (req, res) => {
     if (!cmp) return res.status(401).send("wrong password try again please ");
 
     // create token
-    if (user.isadmin == true && !user.token) {
+    /* if (user.isadmin == true && !user.token) {
       add_Token(user);
-    }
+    } */
 
-    return res.status(200).send(`welcome  🙌  ${user.username}`);
+    let token = await add_Token(user);
+    return res.status(200).json({ token, user });
   } catch (err) {
     return res.status(500).send(err.message);
   }
 });
 
-route.put("/:id", verify_token, (req, res) => {
+/* route.put("/ou", verify_token, (req, res) => {
   res.send("welcome 🙌");
-});
+}); */
 module.exports = route;
