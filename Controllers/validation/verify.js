@@ -2,18 +2,19 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 // middelware to check the token
 const verify_token = (req, res, next) => {
-  let token = (req.headers || req.query || req.body.token)
-  //console.log(token);
-  if (!token.token)
+  //let token = req.headers || req.query || req.body.token;
+  var token = req.headers.authorization.split(' ')[1];
+  console.log(token);
+  if (!token)
     return res.status(401).send("a token is required for authentication");
   try {
     let decode = jwt.verify(token, process.env.SECRET_JWT);
     console.log(decode);
-    req.user = decode;
+    //req.user = decode;
+    next();
   } catch (error) {
     console.log("err", error.message);
   }
-  return next();
 };
 
 const verify_and_authorizate = (req, res, next) => {
