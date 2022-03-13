@@ -16,7 +16,24 @@ route.post("/data", async (req, res) => {
     await new_data.save();
     return res.status(201).send("good");
   } catch (err) {
-    res.status(401).send(err.message)
+    res.status(401).send(err.message);
+  }
+});
+
+route.get("/shoes", async (req, res) => {
+  try {
+    let data = await storeModel.find({ category: "Shoes" });
+    return res.status(201).send(data);
+  } catch (err) {
+    return res.status(501).send(err.message);
+  }
+});
+route.get("/T-shirt", async (req, res) => {
+  try {
+    let data = await storeModel.find({ category: "T-shirt" });
+    return res.status(201).send(data);
+  } catch (error) {
+    return res.status(501).send(err.message);
   }
 });
 module.exports = route;
