@@ -4,7 +4,7 @@ const storeSchema = new mongoose.Schema(
     id: { type: Number, unique: true },
     title: { type: String, required: true },
     price: { type: Number, required: true },
-    size: [Number],
+    size: [String],
     category: { type: String },
     description: { type: String },
     image: { type: String },
