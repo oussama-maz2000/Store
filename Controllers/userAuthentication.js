@@ -4,13 +4,14 @@ const { userModel } = require("../Models/userSchema");
 const { verify_token } = require("./validation/verify");
 const { add_Token } = require("../helpers/addToken");
 const jwt = require("jsonwebtoken");
+const HandleError = require("./Error/HandleErr");
 const {
   check_log_in,
   check_Sign_up,
   compare,
   hashPassword,
 } = require("./validation/userValid");
-route.post("/signup", async (req, res) => {
+route.post("/signup", async (req, res, next) => {
   try {
     //check validation
     let { error } = await check_Sign_up(req.body);
@@ -33,12 +34,12 @@ route.post("/signup", async (req, res) => {
     await user.save();
     return res.status(200).send("thank you for registration");
   } catch (err) {
-    console.log(err.message);
-    return res.status(400).send(err.message);
+    let error = new HandleError(401, err.message);
+    next(error);
   }
 });
 
-route.post("/login", async (req, res) => {
+route.post("/login", async (req, res, next) => {
   try {
     let user = await userModel.findOne({ email: req.body.email });
     if (!user) return res.status(400).send("user doesn't exist");
@@ -46,20 +47,12 @@ route.post("/login", async (req, res) => {
     if (error) return res.status(401).send("something wrong");
     let cmp = await compare(req.body.password, user.password);
     if (!cmp) return res.status(401).send("wrong password try again please ");
-
-    // create token
-    /* if (user.isadmin == true && !user.token) {
-      add_Token(user);
-    } */
-
     let token = await add_Token(user);
     return res.status(200).json({ token, user });
   } catch (err) {
-    return res.status(500).send(err.message);
+    let error = new HandleError(401, err.message);
+    next(error);
   }
 });
 
-/* route.put("/ou", verify_token, (req, res) => {
-  res.send("welcome 🙌");
-}); */
 module.exports = route;
