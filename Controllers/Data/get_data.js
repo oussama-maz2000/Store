@@ -1,13 +1,16 @@
 const route = require("express").Router();
 const storeModel = require("../../Models/storeSchema");
-const HandleError = require("../Error/HandleErr");
+const { HandleError } = require("../Error/HandleErr");
 
 route.get("/", async (req, res, next) => {
   try {
     let data = await storeModel.find();
     return res.status(201).json({ data: data });
   } catch (err) {
-    let error = new HandleError(401, err.message);
+    let error = new HandleError(
+      401,
+      "something wrong happend try after 3 second please"
+    );
     next(error);
   }
 });
@@ -18,7 +21,10 @@ route.post("/data", async (req, res, next) => {
     await new_data.save();
     return res.status(201).send("good");
   } catch (err) {
-    let error = new HandleError(401, err.message);
+    let error = new HandleError(
+      401,
+      " something wrong happend try after 3 second please"
+    );
     next(error);
   }
 });
@@ -37,7 +43,26 @@ route.get("/T-shirt", async (req, res, next) => {
     let data = await storeModel.find({ category: "T-shirt" });
     return res.status(201).send(data);
   } catch (err) {
-    let error = new HandleError(401, err.message);
+    let error = new HandleError(
+      401,
+      "something wrong happend try after 3 second please"
+    );
+    next(error);
+  }
+});
+route.get("/:id", async (req, res, next) => {
+  try {
+    let data = await storeModel.findOne(req.params);
+    if (data) {
+      res.status(201).send(data);
+    } else {
+      res.status(401).send("sorry we don't have it ");
+    }
+  } catch (err) {
+    let error = new HandleError(
+      401,
+      "something wrong happend try after 3 second please"
+    );
     next(error);
   }
 });
