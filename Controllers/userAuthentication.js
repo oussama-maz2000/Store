@@ -4,7 +4,7 @@ const { userModel } = require("../Models/userSchema");
 const { verify_token } = require("./validation/verify");
 const { add_Token } = require("../helpers/addToken");
 const jwt = require("jsonwebtoken");
-const HandleError = require("./Error/HandleErr");
+const {HandleError }= require("./Error/HandleErr");
 const {
   check_log_in,
   check_Sign_up,
