@@ -66,4 +66,28 @@ route.get("/:id", async (req, res, next) => {
     next(error);
   }
 });
+route.delete("/:id", async (req, res, next) => {
+  const id = req.params;
+  try {
+    const delete_product = await storeModel.deleteOne(req.params);
+    res.status(200).send("deleting successfully");
+  } catch (err) {
+    let error = new HandleError(301, "try again please");
+    next(error);
+  }
+});
+route.patch("/:id", async (req, res, next) => {
+  let body = req.body;
+  let {id} = req.params*1;
+  console.log(body);
+
+  try {
+    let update = await storeModel.findByIdAndUpdate(id, { $set: body });
+    res.status(200).send("update successfully");
+  } catch (err) {
+    console.log(err.message);
+    let error = new HandleError(301, "you have problem");
+    next(error);
+  }
+});
 module.exports = route;
