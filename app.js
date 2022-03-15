@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const compression = require("compression");
 const connectDB = require("./Models/connection");
 const routeUser = require("./Controllers/userAuthentication");
 const store = require("./Controllers/Data/get_data");
@@ -13,11 +14,11 @@ app.listen(3000, console.log("server listening port 3000"));
   console.log(req.path);
   next();
 }); */
+app.use(compression());
 app.use(routeUser);
 app.use("/store", store);
 app.use(catch_error);
 app.use(err_handle);
-
 //app.use('/usr',usr)
 app.get("/", (req, res) => {
   res.send("welcome 🙌 ");
