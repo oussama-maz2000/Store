@@ -1,10 +1,11 @@
+
 const mongoose = require("mongoose");
 const storeSchema = new mongoose.Schema(
   {
     id: { type: Number, unique: true },
     title: { type: String, required: true },
     price: { type: Number, required: true },
-    size: [String],
+    size: [Number],
     category: { type: String },
     description: { type: String },
     image: { type: String },

@@ -7,9 +7,13 @@ class HandleError extends Error {
     this.statusCode = statusCode || 500;
     this.message = message || "fail";
   }
+  get info() {
+    return [this.statusCode, this.message];
+  }
 }
 const catch_error = (req, res, next) => {
   const err = new HandleError();
+  //console.log(err)
   next(err);
 };
 

@@ -4,32 +4,27 @@ const { HandleError } = require("../Error/HandleErr");
 
 route.get("/", async (req, res, next) => {
   try {
+
     let data = await storeModel.find();
     return res.status(201).json({ data: data });
   } catch (err) {
-    let error = new HandleError(
-      401,
-      "something wrong happend try after 3 second please"
-    );
+    let error = new HandleError(401, "something wrong happend ");
     next(error);
   }
 });
-route.post("/data", async (req, res, next) => {
+route.post("/insertData", async (req, res, next) => {
   let client_data = req.body;
   try {
     let new_data = await new storeModel(client_data);
     await new_data.save();
     return res.status(201).send("good");
   } catch (err) {
-    let error = new HandleError(
-      401,
-      " something wrong happend try after 3 second please"
-    );
+    let error = new HandleError(401, " something wrong happend ");
     next(error);
   }
 });
 
-route.get("/shoes", async (req, res, next) => {
+route.get("/Shoes", async (req, res, next) => {
   try {
     let data = await storeModel.find({ category: "Shoes" });
     return res.status(201).send(data);
@@ -43,13 +38,22 @@ route.get("/T-shirt", async (req, res, next) => {
     let data = await storeModel.find({ category: "T-shirt" });
     return res.status(201).send(data);
   } catch (err) {
-    let error = new HandleError(
-      401,
-      "something wrong happend try after 3 second please"
-    );
+    let error = new HandleError(401, "something wrong happend ");
     next(error);
   }
 });
+
+route.get("/jeans", async (req, res, next) => {
+  try {
+
+    let data = await storeModel.find({ category: "Jeans" });
+    return res.status(201).send(data);
+  } catch (err) {
+    let error = new HandleError(401, "something wrong happend ");
+    next(error);
+  }
+});
+
 route.get("/:id", async (req, res, next) => {
   try {
     let data = await storeModel.findOne(req.params);
@@ -59,10 +63,7 @@ route.get("/:id", async (req, res, next) => {
       res.status(401).send("sorry we don't have it ");
     }
   } catch (err) {
-    let error = new HandleError(
-      401,
-      "something wrong happend try after 3 second please"
-    );
+    let error = new HandleError(401, "something wrong happend ");
     next(error);
   }
 });
@@ -78,9 +79,7 @@ route.delete("/:id", async (req, res, next) => {
 });
 route.patch("/:id", async (req, res, next) => {
   let body = req.body;
-  let {id} = req.params*1;
-  console.log(body);
-
+  let { id } = req.params * 1;
   try {
     let update = await storeModel.findByIdAndUpdate(id, { $set: body });
     res.status(200).send("update successfully");
@@ -90,4 +89,5 @@ route.patch("/:id", async (req, res, next) => {
     next(error);
   }
 });
+
 module.exports = route;
