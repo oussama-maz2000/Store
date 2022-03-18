@@ -4,11 +4,30 @@ const { HandleError } = require("../Error/HandleErr");
 
 route.get("/", async (req, res, next) => {
   try {
-
     let data = await storeModel.find();
     return res.status(201).json({ data: data });
   } catch (err) {
     let error = new HandleError(401, "something wrong happend ");
+    next(error);
+  }
+});
+route.get("/expensive_product", async (req, res, next) => {
+  try {
+    let data = await storeModel.find({ price: { $gte: 150 } });
+    return res.status(200).send(data);
+    console.log(data);
+  } catch (err) {
+    let error = new HandleError(401, "something wrong happend");
+    next(error);
+  }
+});
+route.get("/cheap_product", async (req, res, next) => {
+  try {
+    let data = await storeModel.find({ price: { $lte: 150 } });
+    return res.status(200).send(data);
+    console.log(data);
+  } catch (err) {
+    let error = new HandleError(401, "something wrong happend");
     next(error);
   }
 });
@@ -45,7 +64,6 @@ route.get("/T-shirt", async (req, res, next) => {
 
 route.get("/jeans", async (req, res, next) => {
   try {
-
     let data = await storeModel.find({ category: "Jeans" });
     return res.status(201).send(data);
   } catch (err) {
