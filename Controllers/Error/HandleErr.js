@@ -1,23 +1,19 @@
 class HandleError extends Error {
-  statusCode;
-  message;
-
-  constructor(statusCode, message) {
+  constructor(message, statusCode) {
     super(message);
-    this.statusCode = statusCode || 500;
-    this.message = message || "fail";
-  }
-  get info() {
-    return [this.statusCode, this.message];
+    this.statusCode = statusCode;
+    this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
+    this.isOperational = true;
+    Error.captureStackTrace(this, this.constructor);
   }
 }
-const catch_error = (req, res, next) => {
-  const err = new HandleError();
-  //console.log(err)
-  next(err);
-};
 
-const err_handle = (err, req, res, next) => {
-  res.status(err.statusCode).json({ err: err.message });
+const golobaleEroor = (err, req, res, next) => {
+  err.statusCode = err.statusCode;
+  err.status = err.status || "error";
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+  });
 };
-module.exports = { HandleError, err_handle, catch_error };
+module.exports = { HandleError, golobaleEroor };
