@@ -3,7 +3,6 @@ const hashPassword = require("../../Controllers/validation/userValid");
 const userModel = require("../../Models/userSchema");
 
 const {
-
   verify_and_authorizate,
 } = require("../../Controllers/validation/verify");
 /* route.put("/:id", verify_and_authorizate, async (req, res) => {

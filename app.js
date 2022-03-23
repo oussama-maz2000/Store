@@ -4,7 +4,7 @@ const compression = require("compression");
 const connectDB = require("./Models/connection");
 const routeUser = require("./Controllers/userAuthentication");
 const store = require("./Controllers/Data/get_data");
-const { err_handle, catch_error } = require("./Controllers/Error/HandleErr");
+const { HandleError, golobaleEroor } = require("./Controllers/Error/HandleErr");
 
 app.use(express.json());
 connectDB;
@@ -17,9 +17,8 @@ app.use("/store", store);
 app.get("/", (req, res, next) => {
   res.status(200).send("welcome");
 });
-app.use("*", (req, res, next) => {
-  res.status(404).send("page not found");
+app.all("*", (req, res, next) => {
+  next(new HandleError(`couldn't find ${req.originalUrl}`, 400));
 });
-app.use(catch_error);
-app.use(err_handle);
-//app.use('/usr',usr)
+
+app.use(golobaleEroor);

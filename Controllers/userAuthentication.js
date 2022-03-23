@@ -4,7 +4,7 @@ const { userModel } = require("../Models/userSchema");
 const { verify_token } = require("./validation/verify");
 const { add_Token } = require("../helpers/addToken");
 const jwt = require("jsonwebtoken");
-const {HandleError }= require("./Error/HandleErr");
+//const {HandleError }= require("./Error/HandleErr");
 const {
   check_log_in,
   check_Sign_up,
@@ -34,8 +34,9 @@ route.post("/signup", async (req, res, next) => {
     await user.save();
     return res.status(200).send("thank you for registration");
   } catch (err) {
-    let error = new HandleError(401, err.message);
-    next(error);
+    /* let error = new HandleError(401, err.message);
+    next(error); */
+    res.status(400).send(err.message);
   }
 });
 
@@ -50,8 +51,9 @@ route.post("/login", async (req, res, next) => {
     let token = await add_Token(user);
     return res.status(200).json({ token, user });
   } catch (err) {
-    let error = new HandleError(401, err.message);
-    next(error);
+    /*   let error = new HandleError(401, err.message);
+    next(error); */
+    res.status(400).send(err.message);
   }
 });
 
