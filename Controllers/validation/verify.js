@@ -3,7 +3,7 @@ require("dotenv").config();
 // middelware to check the token
 const verify_token = (req, res, next) => {
   //let token = req.headers || req.query || req.body.token;
-  var token = req.headers.authorization.split(' ')[1];
+  var token = req.headers.authorization.split(" ")[1];
   console.log(token);
   if (!token)
     return res.status(401).send("a token is required for authentication");
