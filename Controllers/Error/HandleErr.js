@@ -7,35 +7,25 @@ class HandleError extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 }
+const handleduplicatefieldDB = (err) => {
+  let err_keyvalue = err.keyValue;
+  const message = `Duplicatie filed ${err_keyvalue.id}`;
+  return new HandleError(message, 501);
+};
 
 const handleCastError = (err) => {
   let message = `invalid ${err.path} :${err.value}`;
   return new HandleError(message, 402);
 };
 const devErr = (err, res) => {
-
   res.status(err.statusCode).json({
+    from: "devErr",
+    statusCode: err.statusCode,
     status: err.status,
     message: err.message,
     stack: err.stack,
     error: err,
   });
-};
-const prodErr = (err, res) => {
-  //  operational erro sending to the client
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-    });
-
-    // programming error sending to developer
-  } else {
-    res.status(500).json({
-      status: "error",
-      message: "somethign happend wrong",
-    });
-  }
 };
 
 const golobaleEroor = (err, req, res, next) => {
@@ -44,13 +34,6 @@ const golobaleEroor = (err, req, res, next) => {
 
   if (process.env.NODE_ENV == "development") {
     devErr(err, res);
-  } else if (process.env.NODE_ENV == "production") {
-    let error = { ...err };
-
-    if (error.name === "CastError") {error = handleCastError(error);
-    console.log(error);
-    }
-    prodErr(error, res);
   }
 };
 module.exports = { HandleError, golobaleEroor };
