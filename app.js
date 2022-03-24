@@ -8,7 +8,7 @@ const { HandleError, golobaleEroor } = require("./Controllers/Error/HandleErr");
 
 app.use(express.json());
 connectDB;
-app.listen(3001, console.log("server listening port 3000"));
+app.listen(3001, console.log("server listening port 3001"))
 
 app.use(compression());
 app.use(routeUser);
