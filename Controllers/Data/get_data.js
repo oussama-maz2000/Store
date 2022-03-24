@@ -38,7 +38,8 @@ route.post(
   catchAsync(async (req, res, next) => {
     let client_data = req.body;
     const { error } = await productVerify(client_data);
-    if (error) return next(new HandleError(error.details[0].message, 401));
+
+    if (error) return next(new HandleError(error.details[0].message, 402));
     let new_data = await new storeModel(client_data);
     await new_data.save();
     return res.status(201).send("good");
