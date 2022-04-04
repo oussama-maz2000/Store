@@ -36,10 +36,21 @@ route.get(
 route.post(
   "/insertData",
   catchAsync(async (req, res, next) => {
-    let client_data = req.body;
-    const { error } = await productVerify(client_data);
 
-    if (error) return next(new HandleError(error.details[0].message, 402));
+
+    let client_data = {
+      id: req.body.id,
+      title: req.body.title,
+      price: req.body.price,
+      size: req.body.size,
+      category: req.body.category,
+      description: req.body.description,
+      image: req.body.image,
+      available: req.body.available,
+    };
+    //const { error } = await productVerify(client_data);
+
+   // if (error) return next(new HandleError(error.details[0].message, 402));
     let new_data = await new storeModel(client_data);
     await new_data.save();
     return res.status(201).send("good");
