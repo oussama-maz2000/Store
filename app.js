@@ -23,4 +23,4 @@ app.all("*", (req, res, next) => {
 });
 
 app.use(golobaleEroor);
-module.exports.handler = serverless(app);
+
