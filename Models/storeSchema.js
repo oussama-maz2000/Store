@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const storeSchema = new mongoose.Schema(
+ const storeSchema = new mongoose.Schema(
   
   {
     id: { type: Number, unique: true },
@@ -14,4 +14,4 @@ const storeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 const storeModel = mongoose.model("store", storeSchema);
-module.exports = storeModel;
+module.exports = {storeModel,storeSchema};

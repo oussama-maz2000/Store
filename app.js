@@ -2,13 +2,13 @@ const express = require("express");
 const serverless = require("serverless-http");
 const app = express();
 const compression = require("compression");
-const connectDB = require("./Models/connection");
+const connection = require("./Models/connection");
 
 const store = require("./Controllers/Data/get_data");
 const { HandleError, golobaleEroor } = require("./Controllers/Error/HandleErr");
-
+connection;
 app.use(express.json());
-connectDB;
+
 app.listen(3001, console.log("server listening port 3001"));
 
 app.use(compression());
@@ -23,4 +23,3 @@ app.all("*", (req, res, next) => {
 });
 
 app.use(golobaleEroor);
-

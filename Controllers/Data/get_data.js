@@ -1,5 +1,5 @@
 const route = require("express").Router();
-const storeModel = require("../../Models/storeSchema");
+const { storeModel } = require("../../Models/storeSchema");
 const { HandleError } = require("../Error/HandleErr");
 const {
   productVerify,
@@ -36,8 +36,6 @@ route.get(
 route.post(
   "/insertData",
   catchAsync(async (req, res, next) => {
-
-
     let client_data = {
       id: req.body.id,
       title: req.body.title,
@@ -50,7 +48,7 @@ route.post(
     };
     //const { error } = await productVerify(client_data);
 
-   // if (error) return next(new HandleError(error.details[0].message, 402));
+    // if (error) return next(new HandleError(error.details[0].message, 402));
     let new_data = await new storeModel(client_data);
     await new_data.save();
     return res.status(201).send("good");
@@ -113,8 +111,5 @@ route.patch(
     }
   })
 );
-route.get("/*", (req, res) => {
-  res.status(400).send("fuck u");
-});
 
 module.exports = route;
