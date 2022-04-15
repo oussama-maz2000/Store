@@ -55,8 +55,12 @@ route.post("/login", async (req, res, next) => {
     if (!user) return res.status(400).send("user doesn't exist");
     let cmp = await compare(req.body.password, user.password);
     if (!cmp) return res.status(401).send("wrong password try again please ");
-    //   let token = await add_Token(user);
-    return res.status(200).json(user);
+    const token = jwt.sign({ id: user._id }, process.env.SECRET_JWT, {
+      expiresIn: 100000,
+    });
+    return res
+      .status(200)
+      .json({ status: "success", user: user, token: token });
   } catch (err) {
     /*   let error = new HandleError(401, err.message);
     next(error); */
