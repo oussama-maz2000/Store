@@ -24,15 +24,22 @@ route.post("/signup", async (req, res, next) => {
       return res.status(400).send("email exist before try with another one ");
 
     // create new user
-    let user = new userModel({
+    let user = await userModel.create({
       username: req.body.username,
       email: req.body.email,
       password: hash,
       isadmin: req.body.isadmin,
     });
+    const token = jwt.sign({ id: user._id }, process.env.SECRET_JWT, {
+      expiresIn: 100000,
+    });
     //save it in db
     await user.save();
-    return res.status(200).send("thank you for registration");
+    return res.status(200).json({
+      status: "success",
+      user: user,
+      token: token,
+    });
   } catch (err) {
     /* let error = new HandleError(401, err.message);
     next(error); */
@@ -42,14 +49,14 @@ route.post("/signup", async (req, res, next) => {
 
 route.post("/login", async (req, res, next) => {
   try {
-    let user = await userModel.findOne({ email: req.body.email });
-    if (!user) return res.status(400).send("user doesn't exist");
     let { error } = await check_log_in(req.body);
     if (error) return res.status(401).send("something wrong");
+    let user = await userModel.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send("user doesn't exist");
     let cmp = await compare(req.body.password, user.password);
     if (!cmp) return res.status(401).send("wrong password try again please ");
-    let token = await add_Token(user);
-    return res.status(200).json({ token, user });
+    //   let token = await add_Token(user);
+    return res.status(200).json(user);
   } catch (err) {
     /*   let error = new HandleError(401, err.message);
     next(error); */
