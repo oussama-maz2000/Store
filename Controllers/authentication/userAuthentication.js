@@ -1,8 +1,8 @@
 require("dotenv").config();
 const route = require("express").Router();
-const { userModel } = require("../Models/userSchema");
-const { verify_token } = require("./validation/verify");
-const { add_Token } = require("../helpers/addToken");
+const { userModel } = require("../../Models/userSchema");
+const { verify_token } = require("../validation/verify");
+const { add_Token } = require("../../helpers/addToken");
 const jwt = require("jsonwebtoken");
 //const {HandleError }= require("./Error/HandleErr");
 const {
@@ -10,7 +10,7 @@ const {
   check_Sign_up,
   compare,
   hashPassword,
-} = require("./validation/userValid");
+} = require("../validation/userValid");
 route.post("/signup", async (req, res, next) => {
   try {
     //check validation

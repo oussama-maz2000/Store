@@ -3,8 +3,10 @@ const express = require("express");
 const app = express();
 const compression = require("compression");
 const connection = require("./Models/connection");
-const router=require('./Controllers/userAuthentication')
-const store = require("./Controllers/Data/get_data");
+const router=require('./Controllers/authentication/userAuthentication')
+//const store = require("./Controllers/Routers/storeRoute");
+const store = require("./Controllers/generators/storeGEN");
+
 const { HandleError, golobaleEroor } = require("./Controllers/Error/HandleErr");
 connection;
 app.use(express.json());
