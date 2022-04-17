@@ -1,17 +1,14 @@
 require("dotenv").config();
-const route = require("express").Router();
 const { userModel } = require("../../Models/userSchema");
-const { verify_token } = require("../validation/verify");
-const { add_Token } = require("../../helpers/addToken");
 const jwt = require("jsonwebtoken");
-//const {HandleError }= require("./Error/HandleErr");
+const { HandleError } = require("../Error/HandleErr");
 const {
   check_log_in,
   check_Sign_up,
   compare,
   hashPassword,
 } = require("../validation/userValid");
-route.post("/signup", async (req, res, next) => {
+const sign = async (req, res, next) => {
   try {
     //check validation
     let { error } = await check_Sign_up(req.body);
@@ -41,13 +38,11 @@ route.post("/signup", async (req, res, next) => {
       token: token,
     });
   } catch (err) {
-    /* let error = new HandleError(401, err.message);
-    next(error); */
     res.status(400).send(err.message);
   }
-});
+};
 
-route.post("/login", async (req, res, next) => {
+const login = async (req, res, next) => {
   try {
     let { error } = await check_log_in(req.body);
     if (error) return res.status(401).send("something wrong");
@@ -62,10 +57,23 @@ route.post("/login", async (req, res, next) => {
       .status(200)
       .json({ status: "success", user: user, token: token });
   } catch (err) {
-    /*   let error = new HandleError(401, err.message);
-    next(error); */
     res.status(400).send(err.message);
   }
-});
+};
 
-module.exports = route;
+const protect = async (req, res, next) => {
+  let token;
+  //getting the token and cheack is here
+  if (req.headers.token && req.headers.token.startsWith("token")) {
+    token = req.headers.token.split(" ")[1];
+    console.log(token);
+  }
+  
+  if (!token) {
+    return next(new HandleError("you are not logged please log in ", 401));
+  }
+
+  next();
+};
+
+module.exports = { login, sign, protect };
