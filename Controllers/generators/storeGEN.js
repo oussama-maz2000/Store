@@ -16,7 +16,7 @@ const {
 
 router.route("/").get(get_All);
 router.route("/insert").post(insert_product);
-router.route("/:id").delete(deleteOne).patch(update).get(product_byID);
+router.route("/store/:id").delete(deleteOne).patch(update).get(product_byID);
 router.route("/shoes").get(get_Shoes);
 router.route("/jeans").get(get_jeans);
 router.route("/tshirt").get(get_Tshirt);

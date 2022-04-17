@@ -47,7 +47,7 @@ const product_byID = async (req, res, next) => {
   const id = req.params.id;
   let data = await storeModel.findOne(req.params);
   if (!data)
-    return next(new HandleError(`no product with id =${req.params.id}`));
+    return next(new HandleError(`no product with id =${req.params.id}`),401);
   res.status(200).json({ data });
 };
 const deleteOne = async (req, res, next) => {
@@ -61,28 +61,23 @@ const deleteOne = async (req, res, next) => {
   res.status(200).send("deleting successfully ...");
 };
 const update = async (req, res, next) => {
-  let body = req.body;
-  //console.log(body);
   const id = req.params.id * 1;
   const element_updating = await storeModel.findOne({ id });
-  console.log(element_updating);
-  const { error } = await update_product_Verify(body);
+  console.log(element_updating._id);
+  const { error } = await update_product_Verify(req.body);
   if (error) return next(new HandleError(error.details[0].message, 401));
-  /*  else {
-    await storeModel.findByIdAndUpdate(
-      _id ,
-      {
-        title: req.body.title,
-        price: req.body.price,
-        size: req.body.size,
-        category: req.body.category,
-        description: req.body.description,
-        image: req.body.image,
-        available: req.body.available,
-      }
-    );
+  else {
+    await storeModel.findByIdAndUpdate(element_updating, {
+      title: req.body.title,
+      price: req.body.price,
+      size: req.body.size,
+      category: req.body.category,
+      description: req.body.description,
+      image: req.body.image,
+      available: req.body.available,
+    });
   }
-  */ res.status(200).send("update successfully ...");
+  res.status(200).send("update successfully ...");
 };
 
 module.exports = {
