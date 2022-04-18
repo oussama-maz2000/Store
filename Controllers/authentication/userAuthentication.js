@@ -28,7 +28,7 @@ const sign = async (req, res, next) => {
       isadmin: req.body.isadmin,
     });
     const token = jwt.sign({ id: user._id }, process.env.SECRET_JWT, {
-      expiresIn: 100000,
+      expiresIn: "360s",
     });
     //save it in db
     await user.save();
@@ -50,9 +50,15 @@ const login = async (req, res, next) => {
     if (!user) return res.status(400).send("user doesn't exist");
     let cmp = await compare(req.body.password, user.password);
     if (!cmp) return res.status(401).send("wrong password try again please ");
-    const token = jwt.sign({ id: user._id }, process.env.SECRET_JWT, {
-      expiresIn: 100000,
-    });
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.SECRET_JWT,
+      {
+        expiresIn: "360s",
+      }
+    );
     return res
       .status(200)
       .json({ status: "success", user: user, token: token });
@@ -60,19 +66,36 @@ const login = async (req, res, next) => {
     res.status(400).send(err.message);
   }
 };
-
+//protect function it's midleware
 const protect = async (req, res, next) => {
-  let token;
+  let token, decoded;
+
   //getting the token and cheack is here
   if (req.headers.token && req.headers.token.startsWith("token")) {
     token = req.headers.token.split(" ")[1];
-    console.log(token);
   }
-  
+
   if (!token) {
     return next(new HandleError("you are not logged please log in ", 401));
   }
 
+  // verify token
+  let verification_token = jwt.verify(
+    token,
+    process.env.SECRET_JWT,
+    (err, dec) => {
+      if (err) {
+        return next(new HandleError(err.message, 401));
+      }
+      decoded = dec;
+    }
+  );
+
+  //cheack if user still exist or no
+  const freshUser = await userModel.findById(decoded.id);
+  if (!freshUser) {
+    return next(new HandleError("user with this token does no exist ", 402));
+  }
   next();
 };
 

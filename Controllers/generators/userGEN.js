@@ -6,6 +6,6 @@ const {
   protect,
 } = require("../authentication/userAuthentication");
 router.route("/sign").post(sign);
-router.route("/login").post(protect, login);
+router.route("/login").post(login);
 
 module.exports = router;
