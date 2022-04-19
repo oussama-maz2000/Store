@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { protect } = require("../authentication/userAuthentication");
+const { protect,restrict } = require("../authentication/userAuthentication");
 
 const {
   get_All,
@@ -15,9 +15,9 @@ const {
   update,
 } = require("../Routers/storeRoute");
 
-router.route("/").get(protect,get_All);
-router.route("/insert").post(insert_product);
-router.route("/store/:id").delete(deleteOne).patch(update).get(product_byID);
+router.route("/").get(get_All);
+router.route("/insert").post(protect,restrict(),insert_product);
+router.route("/store/:id").delete(protect,restrict(),deleteOne).patch(protect,restrict(),update).get(product_byID);
 router.route("/shoes").get(get_Shoes);
 router.route("/jeans").get(get_jeans);
 router.route("/tshirt").get(get_Tshirt);

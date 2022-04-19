@@ -4,6 +4,7 @@ const {
   login,
   sign,
   protect,
+
 } = require("../authentication/userAuthentication");
 router.route("/sign").post(sign);
 router.route("/login").post(login);
