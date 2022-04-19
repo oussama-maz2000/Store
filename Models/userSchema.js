@@ -18,18 +18,15 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      
-
     },
-    isadmin: {
-      type: Boolean,
-      default: false,
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
     },
   },
   { timestamps: true }
 );
-
-
 
 const userModel = mongoose.model("usermodel", userSchema);
 module.exports = { userModel };
