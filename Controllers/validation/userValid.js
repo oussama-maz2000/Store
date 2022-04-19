@@ -10,7 +10,7 @@ function check_Sign_up(data) {
       })
       .required(),
     password: joi.string().required().min(5),
-    isadmin: joi.boolean(),
+    role: joi.string(),
   });
   return schemaUser.validateAsync(data);
 }
