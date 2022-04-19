@@ -25,10 +25,11 @@ const sign = async (req, res, next) => {
       username: req.body.username,
       email: req.body.email,
       password: hash,
-      isadmin: req.body.isadmin,
+      role: req.body.role,
     });
+
     const token = jwt.sign({ id: user._id }, process.env.SECRET_JWT, {
-      expiresIn: "360s",
+      expiresIn: "1h",
     });
     //save it in db
     await user.save();
@@ -56,7 +57,7 @@ const login = async (req, res, next) => {
       },
       process.env.SECRET_JWT,
       {
-        expiresIn: "360s",
+        expiresIn: "24h",
       }
     );
     return res
@@ -96,7 +97,20 @@ const protect = async (req, res, next) => {
   if (!freshUser) {
     return next(new HandleError("user with this token does no exist ", 402));
   }
+  req.user = freshUser;
+
   next();
 };
 
-module.exports = { login, sign, protect };
+const restrict = (...roles) => {
+  return (req, res, next) => {
+    //console.log(roles); --> to get roles from restrict ['user'or'admin']
+
+    if (req.user.role != "admin") {
+      return next(new HandleError("sorry you don't have permission ", 402));
+    }
+    next();
+  };
+};
+
+module.exports = { login, sign, protect, restrict };
