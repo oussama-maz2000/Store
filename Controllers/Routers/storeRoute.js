@@ -12,15 +12,6 @@ const get_All = async (req, res, next) => {
   return res.status(201).json({ data: data });
   next();
 };
-
-const expensive_product = async (req, res, next) => {
-  let data = await storeModel.find({ price: { $gte: 150 } });
-  return res.status(200).send(data);
-};
-const cheap_product = async (req, res, next) => {
-  let data = await storeModel.find({ price: { $lte: 150 } });
-  return res.status(200).send(data);
-};
 const insert_product = async (req, res, next) => {
   const { error } = await productVerify(req.body);
   if (error) return next(new HandleError(error.details[0].message, 402));
@@ -82,8 +73,6 @@ const update = async (req, res, next) => {
 
 module.exports = {
   get_All,
-  expensive_product,
-  cheap_product,
   insert_product,
   get_Shoes,
   get_Tshirt,
