@@ -8,6 +8,7 @@ const {
   compare,
   hashPassword,
 } = require("../validation/userValid");
+const sendEmail = require("../helpers/email");
 const sign = async (req, res, next) => {
   try {
     //check validation
@@ -74,6 +75,7 @@ const protect = async (req, res, next) => {
   //getting the token and cheack is here
   if (req.headers.token && req.headers.token.startsWith("token")) {
     token = req.headers.token.split(" ")[1];
+    console.log("token :", token);
   }
 
   if (!token) {
@@ -86,9 +88,10 @@ const protect = async (req, res, next) => {
     process.env.SECRET_JWT,
     (err, dec) => {
       if (err) {
-        return next(new HandleError(err.message, 401));
+        return next(new HandleError(err.message, 403));
       }
       decoded = dec;
+      console.log("decoded :", decoded);
     }
   );
 
@@ -97,6 +100,7 @@ const protect = async (req, res, next) => {
   if (!freshUser) {
     return next(new HandleError("user with this token does no exist ", 402));
   }
+  console.log("freshUser :", freshUser);
   req.user = freshUser;
 
   next();
@@ -107,10 +111,45 @@ const restrict = (...roles) => {
     //console.log(roles); --> to get roles from restrict ['user'or'admin']
 
     if (req.user.role != "admin") {
-      return next(new HandleError("sorry you don't have permission ", 402));
+      return next(
+        new HandleError("sorry you're user don't have permission ", 402)
+      );
     }
     next();
   };
 };
 
-module.exports = { login, sign, protect, restrict };
+const forgetPassword = async (req, res, next) => {
+  //1-get user from posted email
+  const user = await userModel.findOne({ email: req.body.email });
+  if (!user)
+    return next(new HandleError("there is no user with email address", 404));
+
+  // 2/generate the random reset token
+  const reset_token = user.create_Rest_Password_token();
+  user.save({ ValidateBeforeSave: false });
+
+  const resetURL = `${req.protocol}://${req.get(
+    "host"
+  )}/usr/resetpassword/${reset_token}`;
+
+  const message = `you fogot password? submit your patch request with new password and confirmpassword in ${resetURL}`;
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: "your password reset token in 10 munite",
+      message: message,
+    });
+    res.status(200).json({
+      status: "succuess",
+      message: "token send in mail",
+    });
+  } catch (err) {
+    user.passwordRestToken = undefined;
+    user.passwordRestExpires = undefined;
+    user.save({ ValidateBeforeSave: false });
+    return next(new HandleError(`there is error ${err.messsage}`, 404));
+  }
+};
+
+module.exports = { login, sign, protect, restrict, forgetPassword };
