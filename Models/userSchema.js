@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const mongoose = require("mongoose");
 
 // creation schma
@@ -24,9 +25,21 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
+    passwordRestToken: String,
+    passwordRestExpires: Date,
   },
   { timestamps: true }
 );
-
+userSchema.methods.create_Rest_Password_token =  function() {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.passwordRestToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  console.log("passwordRestToken ",this.passwordRestToken);
+  console.log('resetToken ',resetToken);
+  this.passwordRestExpires = Date.now() + 10 * 60 * 1000;
+  return resetToken;
+};
 const userModel = mongoose.model("usermodel", userSchema);
 module.exports = { userModel };
