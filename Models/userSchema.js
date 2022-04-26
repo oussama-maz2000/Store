@@ -30,14 +30,17 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-userSchema.methods.create_Rest_Password_token =  function() {
+userSchema.methods.create_Rest_Password_token = function () {
+// the version that we send to client via email
   const resetToken = crypto.randomBytes(32).toString("hex");
+
+  //the encryoted version of reset token
   this.passwordRestToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-  console.log("passwordRestToken ",this.passwordRestToken);
-  console.log('resetToken ',resetToken);
+  console.log("passwordRestToken ", this.passwordRestToken);
+  console.log("resetToken ", resetToken);
   this.passwordRestExpires = Date.now() + 10 * 60 * 1000;
   return resetToken;
 };

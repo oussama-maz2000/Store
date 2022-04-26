@@ -126,8 +126,10 @@ const forgetPassword = async (req, res, next) => {
     return next(new HandleError("there is no user with email address", 404));
 
   // 2/generate the random reset token
+  //we use (user.creaet_Rest_Password_token) to acces it from model db
   const reset_token = user.create_Rest_Password_token();
   user.save({ ValidateBeforeSave: false });
+  // (ValidateBeforeSave: false) we use it to ignore the error of validtion error if it's not true
 
   const resetURL = `${req.protocol}://${req.get(
     "host"
@@ -137,7 +139,7 @@ const forgetPassword = async (req, res, next) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: "your password reset token in 10 munite",
+      subject: "your password reset token (valide for 10 munite)",
       message: message,
     });
     res.status(200).json({
