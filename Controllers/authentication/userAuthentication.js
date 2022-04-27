@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 require("dotenv").config();
 const { userModel } = require("../../Models/userSchema");
 const jwt = require("jsonwebtoken");
@@ -139,8 +140,7 @@ const forgetPassword = async (req, res, next) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: "your password reset token (valide for 10 munite)",
-      message: message,
+      subject: message,
     });
     res.status(200).json({
       status: "succuess",
@@ -154,4 +154,23 @@ const forgetPassword = async (req, res, next) => {
   }
 };
 
-module.exports = { login, sign, protect, restrict, forgetPassword };
+const resetPassword = async (req, res, next) => {
+  // 1) Get user based on reset token from the forgetPassword route
+  const resetoken = req.query.resetoken.split(" ")[1];
+  const cryp_token = crypto
+    .createHash("sha256")
+    .update(resetoken)
+    .digest("hex");
+  const user = await userModel.findOne({ passwordRestToken: cryp_token });
+  console.log(user);
+  res.status(200).send(cryp_token);
+};
+
+module.exports = {
+  login,
+  sign,
+  protect,
+  restrict,
+  forgetPassword,
+  resetPassword,
+};
