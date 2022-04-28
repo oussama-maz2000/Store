@@ -8,6 +8,7 @@ const {
   check_Sign_up,
   compare,
   hashPassword,
+  validPassword,
 } = require("../validation/userValid");
 const sendEmail = require("../helpers/email");
 const sign = async (req, res, next) => {
@@ -155,14 +156,28 @@ const forgetPassword = async (req, res, next) => {
 };
 
 const resetPassword = async (req, res, next) => {
-  // 1) Get user based on reset token from the forgetPassword route
+  /**
+   * <> Get user based on reset token from the forgetPassword route
+   * ! if token is invalid or expired we send error
+   */
   const resetoken = req.query.resetoken.split(" ")[1];
   const cryp_token = crypto
     .createHash("sha256")
     .update(resetoken)
     .digest("hex");
-  const user = await userModel.findOne({ passwordRestToken: cryp_token });
+  console.log(cryp_token);
+  const user = await userModel.findOne({
+    passwordRestToken: cryp_token,
+  });
   console.log(user);
+  if (!user) return next(new HandleError("token is invalid or expired", 400));
+  let { error } = await validPassword(req.body);
+  if (error) {
+    return res.status(401).send(error.details[0]);
+  }
+  /* let hashpassword = await hashPassword(password);
+  console.log(hashpassword); */
+
   res.status(200).send(cryp_token);
 };
 

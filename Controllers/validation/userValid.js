@@ -33,4 +33,16 @@ async function compare(password, hashpassword) {
   return bcrypt.compare(password, hashpassword);
 }
 
-module.exports = { check_log_in, check_Sign_up, compare, hashPassword };
+async function validPassword(data) {
+  let validation_password = joi.object({
+    password: joi.string().min(5).required(),
+  });
+  return validation_password.validateAsync(data);
+}
+module.exports = {
+  check_log_in,
+  check_Sign_up,
+  compare,
+  hashPassword,
+  validPassword,
+};

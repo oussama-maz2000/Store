@@ -8,6 +8,11 @@ const store = require("./Controllers/generators/storeGEN");
 const { HandleError, golobaleEroor } = require("./Controllers/Error/HandleErr");
 connection;
 app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: false,
+  })
+);
 
 app.listen(3001, console.log("server listening port 3001"));
 
