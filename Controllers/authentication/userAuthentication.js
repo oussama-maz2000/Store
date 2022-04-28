@@ -158,6 +158,8 @@ const forgetPassword = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   /**
    * <> Get user based on reset token from the forgetPassword route
+   * <> updating the user password
+   * <> log log user in , send jwt
    * ! if token is invalid or expired we send error
    */
   const resetoken = req.query.resetoken.split(" ")[1];
@@ -174,14 +176,19 @@ const resetPassword = async (req, res, next) => {
   try {
     let { error, password } = await validPassword(req.body);
     if (error) return res.status(400).send(error.details[0]);
-    let hashpassword = await hashPassword(password);
-    console.log(hashpassword);
-    user.password = hashpassword;
+    /* let hashpassword = await hashPassword(password);
+    console.log(hashpassword); */
+    user.password = password;
     user.passwordRestExpires = null;
-    user.passwordRestToken = null;
+    //user.passwordRestToken = null;
     user.save();
 
-    res.status(200).send("updating password ...");
+    const token = jwt.sign({ id: user._id }, process.env.SECRET_JWT);
+
+    res.status(200).json({
+      stuatus: "succes",
+      token: token,
+    });
   } catch (err) {
     res.status(400).send(err.stack);
   }
