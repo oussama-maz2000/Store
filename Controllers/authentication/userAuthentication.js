@@ -165,20 +165,26 @@ const resetPassword = async (req, res, next) => {
     .createHash("sha256")
     .update(resetoken)
     .digest("hex");
-  console.log(cryp_token);
+
   const user = await userModel.findOne({
     passwordRestToken: cryp_token,
   });
-  console.log(user);
-  if (!user) return next(new HandleError("token is invalid or expired", 400));
-  let { error } = await validPassword(req.body);
-  if (error) {
-    return res.status(401).send(error.details[0]);
-  }
-  /* let hashpassword = await hashPassword(password);
-  console.log(hashpassword); */
 
-  res.status(200).send(cryp_token);
+  if (!user) return next(new HandleError("token is invalid or expired", 400));
+  try {
+    let { error, password } = await validPassword(req.body);
+    if (error) return res.status(400).send(error.details[0]);
+    let hashpassword = await hashPassword(password);
+    console.log(hashpassword);
+    user.password = hashpassword;
+    user.passwordRestExpires = null;
+    user.passwordRestToken = null;
+    user.save();
+
+    res.status(200).send("updating password ...");
+  } catch (err) {
+    res.status(400).send(err.stack);
+  }
 };
 
 module.exports = {
