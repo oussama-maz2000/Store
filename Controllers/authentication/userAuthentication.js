@@ -194,6 +194,17 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
+const updatePassword = async (req, res, next) => {
+  /**
+   * ? get user from collection
+   * ? check the input password correct with old password
+   * ? if so , update password
+   * <> log user in and send token
+   * ! if not send error updating or incorrect password
+   *
+   */
+};
+
 module.exports = {
   login,
   sign,
