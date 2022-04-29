@@ -21,3 +21,4 @@ router.route("/jeans").get(get_jeans);
 router.route("/tshirt").get(get_Tshirt);
 
 module.exports = router;
+
