@@ -45,6 +45,7 @@ const sign = async (req, res, next) => {
     res.status(400).send(err.message);
   }
 };
+//__________________________________________________________________________________
 
 const login = async (req, res, next) => {
   try {
@@ -70,6 +71,8 @@ const login = async (req, res, next) => {
     res.status(400).send(err.message);
   }
 };
+//__________________________________________________________________________________
+
 //protect function it's midleware
 const protect = async (req, res, next) => {
   let token, decoded;
@@ -108,6 +111,8 @@ const protect = async (req, res, next) => {
   next();
 };
 
+//__________________________________________________________________________________
+
 const restrict = (...roles) => {
   return (req, res, next) => {
     //console.log(roles); --> to get roles from restrict ['user'or'admin']
@@ -120,6 +125,8 @@ const restrict = (...roles) => {
     next();
   };
 };
+
+//__________________________________________________________________________________
 
 const forgetPassword = async (req, res, next) => {
   //1-get user from posted email
@@ -155,6 +162,8 @@ const forgetPassword = async (req, res, next) => {
   }
 };
 
+//__________________________________________________________________________________
+
 const resetPassword = async (req, res, next) => {
   /**
    * <> Get user based on reset token from the forgetPassword route
@@ -178,9 +187,9 @@ const resetPassword = async (req, res, next) => {
     if (error) return res.status(400).send(error.details[0]);
     /* let hashpassword = await hashPassword(password);
     console.log(hashpassword); */
-    user.password = password;
+    user.password = null;
     user.passwordRestExpires = null;
-    //user.passwordRestToken = null;
+    user.passwordRestToken = null;
     user.save();
 
     const token = jwt.sign({ id: user._id }, process.env.SECRET_JWT);
@@ -194,6 +203,8 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
+//__________________________________________________________________________________
+
 const updatePassword = async (req, res, next) => {
   /**
    * ? get user from collection
@@ -203,6 +214,32 @@ const updatePassword = async (req, res, next) => {
    * ! if not send error updating or incorrect password
    *
    */
+  try {
+    let token, decoded;
+    token = req.query.token.split(" ")[1];
+    if (!token) return next(new HandleError("enter token ", 404));
+    const verify = jwt.verify(token, process.env.SECRET_JWT, (err, dec) => {
+      if (err) return next(new HandleError("invalide token", 404));
+      decoded = dec;
+    });
+
+    const user = await userModel.findOne({ _id: decoded.id });
+    if (!user)
+      return next(new HandleError("undifined user with this token", 404));
+
+    let { error, password } = await validPassword({
+      password: req.body.password,
+    });
+    if (error) return res.status(400).send(error.details[0]);
+    user.password = password;
+    user.save();
+    res.status(200).json({
+      stuatus: "success",
+      message: "updating done ...",
+    });
+  } catch (error) {
+    res.status(400).send(error.stack);
+  }
 };
 
 module.exports = {
@@ -212,4 +249,5 @@ module.exports = {
   restrict,
   forgetPassword,
   resetPassword,
+  updatePassword,
 };
