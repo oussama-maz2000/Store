@@ -242,6 +242,8 @@ const updatePassword = async (req, res, next) => {
   }
 };
 
+//________________________________________________________________________________________
+
 module.exports = {
   login,
   sign,
@@ -250,4 +252,5 @@ module.exports = {
   forgetPassword,
   resetPassword,
   updatePassword,
+
 };
