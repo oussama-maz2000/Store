@@ -27,11 +27,16 @@ const userSchema = new mongoose.Schema(
     },
     passwordRestToken: String,
     passwordRestExpires: Date,
+    isactive: {
+      type: Boolean,
+      default: true,
+      select: false,
+    },
   },
   { timestamps: true }
 );
 userSchema.methods.create_Rest_Password_token = function () {
-// the version that we send to client via email
+  // the version that we send to client via email
   const resetToken = crypto.randomBytes(32).toString("hex");
 
   //the encryoted version of reset token
