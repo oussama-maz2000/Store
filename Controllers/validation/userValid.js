@@ -39,10 +39,25 @@ async function validPassword(data) {
   });
   return validation_password.validateAsync(data);
 }
+
+async function validUpdate(data) {
+  let valide = joi.object({
+    username: joi.string().alphanum().min(4).max(25).required(),
+    email: joi
+      .string()
+      .email({
+        tlds: { allow: ["com", "net", "fr", "org"] },
+      })
+      .required(),
+    role: joi.string(),
+  });
+  return valide.validateAsync(data);
+}
 module.exports = {
   check_log_in,
   check_Sign_up,
   compare,
   hashPassword,
   validPassword,
+  validUpdate,
 };
