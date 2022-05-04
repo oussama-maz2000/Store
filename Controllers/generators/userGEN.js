@@ -14,6 +14,6 @@ router.route("/login").post(login);
 router.route("/forgotPassword").post(forgetPassword);
 router.route("/resetPassword").patch(resetPassword);
 router.route("/updateMyPassword").patch(updatePassword);
-router.route("/updateMe").patch(protect, updateMe);
+router.route("/updateMe").patch( updateMe);
 
 module.exports = router;

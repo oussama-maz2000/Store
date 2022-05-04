@@ -102,6 +102,7 @@ const protect = async (req, res, next) => {
 
   //cheack if user still exist or no
   const freshUser = await userModel.findById(decoded.id);
+  console.log(freshUser);
   if (!freshUser) {
     return next(new HandleError("user with this token does no exist ", 402));
   }
@@ -223,14 +224,14 @@ const updatePassword = async (req, res, next) => {
       decoded = dec;
     });
 
-    const user = await userModel.findOne({ _id: decoded.id });
+    const user = await userModel.findById(decoded.id);
     if (!user)
       return next(new HandleError("undifined user with this token", 404));
 
     let { error, password } = await validPassword({
       password: req.body.password,
     });
-    if (error) return res.status(400).send(error.details[0]);
+    if (error) return res.status(400).send(error.details[0].message);
     user.password = password;
     user.save();
     res.status(200).json({
@@ -252,5 +253,4 @@ module.exports = {
   forgetPassword,
   resetPassword,
   updatePassword,
-
 };
