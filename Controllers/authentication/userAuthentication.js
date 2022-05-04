@@ -76,17 +76,13 @@ const login = async (req, res, next) => {
 //protect function it's midleware
 const protect = async (req, res, next) => {
   let token, decoded;
-
   //getting the token and cheack is here
   if (req.headers.token && req.headers.token.startsWith("token")) {
     token = req.headers.token.split(" ")[1];
-    console.log("token :", token);
   }
-
   if (!token) {
     return next(new HandleError("you are not logged please log in ", 401));
   }
-
   // verify token
   let verification_token = jwt.verify(
     token,
@@ -96,19 +92,14 @@ const protect = async (req, res, next) => {
         return next(new HandleError(err.message, 403));
       }
       decoded = dec;
-      console.log("decoded :", decoded);
     }
   );
-
   //cheack if user still exist or no
   const freshUser = await userModel.findById(decoded.id);
-  console.log(freshUser);
   if (!freshUser) {
     return next(new HandleError("user with this token does no exist ", 402));
   }
-  console.log("freshUser :", freshUser);
   req.user = freshUser;
-
   next();
 };
 
