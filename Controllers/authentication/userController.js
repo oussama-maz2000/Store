@@ -14,7 +14,6 @@ const updateMe = async (req, res, next) => {
     );
   // 2)Update the user document
   let user = req.user;
-  console.log(user);
   // 2.3) check if the data input is correct
   try {
     const validation = await validUpdate(req.body);
@@ -36,6 +35,9 @@ const updateMe = async (req, res, next) => {
   }
 };
 
-const deleteUser = async (req, res, next) => {};
+const deleteUser = async (req, res, next) => {
+  await userModel.findByIdAndUpdate(req.user.id, { isactive: false });
+  res.status(204).json({ stuatus: "succes", data: null });
+};
 
-module.exports = { updateMe };
+module.exports = { updateMe, deleteUser };
