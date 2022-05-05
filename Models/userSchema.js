@@ -38,7 +38,6 @@ const userSchema = new mongoose.Schema(
 userSchema.methods.create_Rest_Password_token = function () {
   // the version that we send to client via email
   const resetToken = crypto.randomBytes(32).toString("hex");
-
   //the encryoted version of reset token
   this.passwordRestToken = crypto
     .createHash("sha256")
@@ -49,5 +48,10 @@ userSchema.methods.create_Rest_Password_token = function () {
   this.passwordRestExpires = Date.now() + 10 * 60 * 1000;
   return resetToken;
 };
+
+userSchema.pre(/^find/, function (next) {
+  this.find({ isactive: { $ne: false } });
+  next();
+});
 const userModel = mongoose.model("usermodel", userSchema);
 module.exports = { userModel };
