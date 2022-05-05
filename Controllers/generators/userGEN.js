@@ -7,13 +7,16 @@ const {
   forgetPassword,
   resetPassword,
   updatePassword,
+  get_users,
 } = require("../authentication/userAuthentication");
-const { updateMe } = require("../authentication/userController");
+const { updateMe, deleteUser } = require("../authentication/userController");
 router.route("/sign").post(sign);
 router.route("/login").post(login);
 router.route("/forgotPassword").post(forgetPassword);
 router.route("/resetPassword").patch(resetPassword);
 router.route("/updateMyPassword").patch(updatePassword);
 router.route("/updateMe").patch(protect, updateMe);
+router.route("/deleteme").delete(protect, deleteUser);
+router.route("/getAll").get(protect, get_users);
 
 module.exports = router;

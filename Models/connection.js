@@ -15,7 +15,7 @@ const connection = mongoose
     console.log("you lost connection or you have problem with database");
     res
       .status(401)
-      .send("you lost connection or you have problem with database");
+      .send("you lost connection or maybe you have problem on your database");
   });
 
 module.exports = connection;
