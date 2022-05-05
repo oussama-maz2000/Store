@@ -234,6 +234,10 @@ const updatePassword = async (req, res, next) => {
   }
 };
 
+const get_users = async (req, res, next) => {
+  const data = await userModel.find();
+  res.status(200).json({ stuatus: "success", data: data });
+};
 //________________________________________________________________________________________
 
 module.exports = {
@@ -244,4 +248,5 @@ module.exports = {
   forgetPassword,
   resetPassword,
   updatePassword,
+  get_users,
 };
