@@ -3,6 +3,7 @@ require("dotenv").config();
 const { userModel } = require("../../Models/userSchema");
 const jwt = require("jsonwebtoken");
 const { HandleError } = require("../Error/HandleErr");
+const {createSendToken}=require('../helpers/token')
 const {
   check_log_in,
   check_Sign_up,
@@ -30,17 +31,9 @@ const sign = async (req, res, next) => {
       password: hash,
       role: req.body.role,
     });
-
-    const token = jwt.sign({ id: user._id }, process.env.SECRET_JWT, {
-      expiresIn: "1h",
-    });
     //save it in db
     await user.save();
-    return res.status(200).json({
-      status: "success",
-      user: user,
-      token: token,
-    });
+    createSendToken(user, 201, res);
   } catch (err) {
     res.status(400).send(err.message);
   }
@@ -52,21 +45,11 @@ const login = async (req, res, next) => {
     let { error } = await check_log_in(req.body);
     if (error) return res.status(401).send("something wrong");
     let user = await userModel.findOne({ email: req.body.email });
+    console.log(user);
     if (!user) return res.status(400).send("user doesn't exist");
     let cmp = await compare(req.body.password, user.password);
     if (!cmp) return res.status(401).send("wrong password try again please ");
-    const token = jwt.sign(
-      {
-        id: user._id,
-      },
-      process.env.SECRET_JWT,
-      {
-        expiresIn: "24h",
-      }
-    );
-    return res
-      .status(200)
-      .json({ status: "success", user: user, token: token });
+    createSendToken(user, 201, res);
   } catch (err) {
     res.status(400).send(err.message);
   }
@@ -194,9 +177,7 @@ const resetPassword = async (req, res, next) => {
     res.status(400).send(err.stack);
   }
 };
-
 //__________________________________________________________________________________
-
 const updatePassword = async (req, res, next) => {
   /**
    * ? get user from collection
@@ -239,7 +220,6 @@ const get_users = async (req, res, next) => {
   res.status(200).json({ stuatus: "success", data: data });
 };
 //________________________________________________________________________________________
-
 module.exports = {
   login,
   sign,
