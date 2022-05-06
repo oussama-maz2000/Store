@@ -9,7 +9,7 @@ const connection = mongoose
     useNewUrlParser: true,
   })
   .then((result) => {
-    console.log("connect with db");
+    console.log("connect 😍");
   })
   .catch((err) => {
     console.log("you lost connection or you have problem with database");
