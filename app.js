@@ -8,6 +8,7 @@ const ratelimiter = require("express-rate-limit");
 const sanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const xss = require("xss-clean");
+const hpp = require("hpp");
 const { HandleError, golobaleEroor } = require("./Controllers/Error/HandleErr");
 // securite
 app.use(helmet());
@@ -31,6 +32,13 @@ app.use(sanitize());
 
 //data sanitization against xss
 app.use(xss());
+
+//Prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: ["price"], //you can put fields into array
+  })
+);
 app.listen(3001, console.log("server listening port 3001 😎"));
 
 app.use(compression());
