@@ -3,7 +3,7 @@ require("dotenv").config();
 const { userModel } = require("../../Models/userSchema");
 const jwt = require("jsonwebtoken");
 const { HandleError } = require("../Error/HandleErr");
-const {createSendToken}=require('../helpers/token')
+const { createSendToken } = require("../helpers/token");
 const {
   check_log_in,
   check_Sign_up,
@@ -78,11 +78,14 @@ const protect = async (req, res, next) => {
     }
   );
   //cheack if user still exist or no
+  if (!decoded)
+    return res.status(401).json({ status: "failed", message: "user undefind" });
   const freshUser = await userModel.findById(decoded.id);
   if (!freshUser) {
     return next(new HandleError("user with this token does no exist ", 402));
   }
   req.user = freshUser;
+  console.log(typeof freshUser._id);
   next();
 };
 
@@ -90,9 +93,9 @@ const protect = async (req, res, next) => {
 
 const restrict = (...roles) => {
   return (req, res, next) => {
-    //console.log(roles); --> to get roles from restrict ['user'or'admin']
+    console.log(roles); //--> to get roles from restrict ['user'or'admin']
 
-    if (req.user.role != "admin") {
+    if (!roles.includes(req.user.role)) {
       return next(
         new HandleError("sorry you're user don't have permission ", 402)
       );

@@ -14,11 +14,11 @@ const {
 } = require("../Routers/storeRoute");
 
 router.route("/").get(protect, get_All);
-router.route("/insert").post(protect, restrict(), insert_product);
+router.route("/insert").post(protect, restrict("admin"), insert_product);
 router
   .route("/:id")
-  .delete(protect, restrict(), deleteOne)
-  .patch(protect, restrict(), update_Data)
+  .delete(protect, restrict("admin"), deleteOne)
+  .patch(protect, restrict("admin"), update_Data)
   .get(product_byID);
 router.route("/shoes").get(get_Shoes);
 router.route("/jeans").get(get_jeans);

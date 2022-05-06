@@ -12,7 +12,7 @@ const connection = mongoose
     console.log("connect 😍");
   })
   .catch((err) => {
-    console.log("you lost connection or you have problem with database");
+    console.log("you lost connection or you have problem with database ");
     res
       .status(401)
       .send("you lost connection or maybe you have problem on your database");

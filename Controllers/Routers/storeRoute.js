@@ -13,11 +13,22 @@ const get_All = async (req, res, next) => {
   next();
 };
 const insert_product = async (req, res, next) => {
+  console.log(req.user);
   const { error } = await productVerify(req.body);
   if (error) return next(new HandleError(error.details[0].message, 402));
-  let new_data = await new storeModel(req.body);
+  let new_data = await new storeModel({
+    id: req.body.id,
+    title: req.body.title,
+    price: req.body.price,
+    size: req.body.size,
+    category: req.body.category,
+    description: req.body.description,
+    image: req.body.image,
+    available: req.body.available,
+    by_user: [req.user._id],
+  });
   await new_data.save();
-  return res.status(201).send("inserting successfully ...");
+  return res.status(201).send(`inserting successfully by ${req.user.username}`);
 };
 
 const get_Shoes = async (req, res, next) => {
