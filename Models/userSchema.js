@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema(
       default: true,
       select: false,
     },
+//     prducts: [{ type: mongoose.Schema.ObjectId, ref: "store" }],
   },
   { timestamps: true }
 );
@@ -53,5 +54,6 @@ userSchema.pre(/^find/, function (next) {
   this.find({ isactive: { $ne: false } });
   next();
 });
+
 const userModel = mongoose.model("usermodel", userSchema);
 module.exports = { userModel };

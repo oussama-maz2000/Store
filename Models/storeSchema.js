@@ -30,6 +30,16 @@ storeSchema.pre(/^find/, function (next) {
     path: "by_user",
     select: "-__v -updatedAt -createdAt -password ",
   });
+  /* 
+  * when you want populate multiple fild just do (this .populate({}).populate)
+  * the virtual populate is :
+  *                           storeSchema.virtual('nameField',{
+  * ref:'',
+  * forgienFiled:''
+  * localField:''
+  * })
+
+  */
 });
 
 const storeModel = mongoose.model("store", storeSchema);
