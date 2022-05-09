@@ -40,4 +40,12 @@ const deleteUser = async (req, res, next) => {
   res.status(204).json({ stuatus: "succes", data: null });
 };
 
-module.exports = { updateMe, deleteUser };
+const getMe = async (req, res, next) => {
+  try {
+    const user = await userModel.findById(req.user._id);
+    res.status(200).json({ stuatus: "seccuss", data: user });
+  } catch (error) {
+    next(new HandleError(`there is error ${error.messsage}`, 404));
+  }
+};
+module.exports = { updateMe, deleteUser, getMe };
