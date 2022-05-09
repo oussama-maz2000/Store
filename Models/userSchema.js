@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     role: {
       type: String,
@@ -32,9 +33,9 @@ const userSchema = new mongoose.Schema(
       default: true,
       select: false,
     },
-//     prducts: [{ type: mongoose.Schema.ObjectId, ref: "store" }],
+    //     prducts: [{ type: mongoose.Schema.ObjectId, ref: "store" }],
   },
-  { timestamps: true }
+  { timestamps: true, select: false }
 );
 userSchema.methods.create_Rest_Password_token = function () {
   // the version that we send to client via email

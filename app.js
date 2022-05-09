@@ -39,7 +39,7 @@ app.use(
     whitelist: ["price"], //you can put fields into array
   })
 );
-app.listen(3001, console.log("server listening port 3001 😎"));
+app.listen(3001, console.log("server ON😎"));
 
 app.use(compression());
 
