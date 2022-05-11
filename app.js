@@ -9,6 +9,19 @@ const sanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+//const { uplaod } = require("./Controllers/helpers/upload");
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(new Error("error"), "./image/");
+  },
+  filename: (req, file, cb) => {
+    //console.log(req);
+    console.log(file);
+    cb(new Error("error"), Date.now() + file.originalname);
+  },
+});
+const uplaod = multer({ storage });
 const { HandleError, golobaleEroor } = require("./Controllers/Error/HandleErr");
 // securite
 app.use(helmet());
@@ -53,3 +66,7 @@ app.get("/", (req, res, next) => {
 }); */
 
 app.use(golobaleEroor);
+app.use(express.static("image"));
+app.post("/upload", uplaod.single("image"), (req, res, next) => {
+  console.log(req.file);
+});
