@@ -9,27 +9,21 @@ const sanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const hpp = require("hpp");
-//const { uplaod } = require("./Controllers/helpers/upload");
-const multer = require("multer");
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(new Error("error"), "./image/");
-  },
-  filename: (req, file, cb) => {
-    //console.log(req);
-    console.log(file);
-    cb(new Error("error"), Date.now() + file.originalname);
-  },
-});
-const uplaod = multer({ storage });
+const bodyparser = require("body-parser");
+const formData = require("express-form-data");
 const { HandleError, golobaleEroor } = require("./Controllers/Error/HandleErr");
+const options = {
+  autoClean: true,
+};
+app.use(formData.parse(options));
 // securite
 app.use(helmet());
 connection;
+app.use(bodyparser.text());
 app.use(express.json());
 app.use(
   express.urlencoded({
-    extended: false,
+    extended: true,
   })
 );
 
@@ -67,6 +61,4 @@ app.get("/", (req, res, next) => {
 
 app.use(golobaleEroor);
 app.use(express.static("image"));
-app.post("/upload", uplaod.single("image"), (req, res, next) => {
-  console.log(req.file);
-});
+

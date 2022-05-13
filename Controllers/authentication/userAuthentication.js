@@ -45,13 +45,12 @@ const login = async (req, res, next) => {
     let { error } = await check_log_in(req.body);
     if (error) return res.status(401).send("something wrong");
     let user = await userModel.findOne({ email: req.body.email });
-    console.log(user);
     if (!user) return res.status(400).send("user doesn't exist");
     let cmp = await compare(req.body.password, user.password);
     if (!cmp) return res.status(401).send("wrong password try again please ");
     createSendToken(user, 201, res);
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send(err.stack);
   }
 };
 //__________________________________________________________________________________

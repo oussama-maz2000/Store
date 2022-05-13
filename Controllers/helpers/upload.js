@@ -1,13 +1,21 @@
 const path = require("path");
 const multer = require("multer");
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(new Error("error"), path.join(__dirname, "./image"));
+  destination: (req, file, cb) => {
+    try {
+      cb(null, "./image");
+    } catch (error) {
+      console.log(error.stack);
+    }
   },
-  filename: function (req, file, cb) {
-    //console.log(req);
-    console.log(file);
-    cb(new Error("error"), Date.now() + file.originalname);
+  filename: (req, file, cb) => {
+    try {
+      console.log("from upload", req.user);
+      let code = Math.floor(Date.now() / 10000000);
+      cb(null, req.user.username + " - " + code + " - " + file.originalname);
+    } catch (error) {
+      console.log(error.message);
+    }
   },
 });
 

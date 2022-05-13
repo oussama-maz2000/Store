@@ -2,6 +2,7 @@ const route = require("express").Router();
 const { storeModel } = require("../../Models/storeSchema");
 const { HandleError } = require("../Error/HandleErr");
 const { userModel } = require("../../Models/userSchema");
+const { uplaod } = require("../helpers/upload");
 
 const {
   productVerify,
@@ -15,7 +16,6 @@ const get_All = async (req, res, next) => {
   next();
 };
 const insert_product = async (req, res, next) => {
-  console.log(req.user);
   const { error } = await productVerify(req.body);
   if (error) return next(new HandleError(error.details[0].message, 402));
   let new_data = await new storeModel({
@@ -29,9 +29,10 @@ const insert_product = async (req, res, next) => {
     available: req.body.available,
     by_user: [req.user._id],
   });
-  console.log(req.user);
-  await new_data.save();
-  return res.status(201).send(`inserting successfully by ${req.user.username}`);
+  //console.log(req.user);
+  console.log(req.body);
+  // await new_data.save();
+  return res.status(201).send(`inserting successfully by `);
 };
 
 const get_Shoes = async (req, res, next) => {

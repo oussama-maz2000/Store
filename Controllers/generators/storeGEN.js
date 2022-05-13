@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { protect, restrict } = require("../authentication/userAuthentication");
-
+const { uplaod } = require("../helpers/upload");
 const {
   get_All,
   insert_product,
@@ -14,7 +14,9 @@ const {
 } = require("../Routers/storeRoute");
 
 router.route("/").get(protect, get_All);
-router.route("/insert").post(protect, restrict("admin"), insert_product);
+router
+  .route("/insert")
+  .post(protect, restrict("admin"), uplaod.single("image"), insert_product);
 router
   .route("/:id")
   .delete(protect, restrict("admin"), deleteOne)
