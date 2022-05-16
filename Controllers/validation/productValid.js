@@ -10,6 +10,7 @@ const productVerify = async (data) => {
     description: joi.string().min(5),
     image: joi.array().items(joi.string()),
     available: joi.boolean(),
+    qty: joi.number().required(),
   });
   return schema.validate(data);
 };

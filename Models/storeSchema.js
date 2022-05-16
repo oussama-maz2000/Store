@@ -10,6 +10,7 @@ const storeSchema = new mongoose.Schema(
     description: { type: String },
     image: { type: [String] },
     available: { type: Boolean, default: true },
+    qty: { typeNnumber, required: true },
     by_user: { type: mongoose.Schema.ObjectId, ref: "usermodel" },
   },
   { timestamps: true }

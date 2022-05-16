@@ -27,9 +27,9 @@ const insert_product = async (req, res, next) => {
     description: req.body.description,
     image: req.body.image,
     available: req.body.available,
+    qty: req.body.qty,
     by_user: [req.user._id],
   });
-  //console.log(req.user);
   console.log(req.body);
   // await new_data.save();
   return res.status(201).send(`inserting successfully by `);
@@ -80,6 +80,8 @@ const update_Data = async (req, res, next) => {
       description: req.body.description,
       image: req.body.image,
       available: req.body.available,
+      qty: req.body.qty,
+      //console.log(req.user);
     });
   }
   res.status(200).send("update successfully ...");
