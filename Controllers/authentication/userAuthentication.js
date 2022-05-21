@@ -32,7 +32,8 @@ const sign = async (req, res, next) => {
       role: req.body.role,
     });
     //save it in db
-    await user.save();
+    console.log(user);
+    // await user.save();
     createSendToken(user, 201, res);
   } catch (err) {
     res.status(400).send(err.message);
