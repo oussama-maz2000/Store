@@ -87,6 +87,10 @@ const update_Data = async (req, res, next) => {
   res.status(200).send("update successfully ...");
 };
 
+const get_By_category = async (req, res, next) => {
+  req.status(200).send(req.params);
+};
+
 module.exports = {
   get_All,
   insert_product,
@@ -96,4 +100,5 @@ module.exports = {
   product_byID,
   deleteOne,
   update_Data,
+  get_By_category,
 };

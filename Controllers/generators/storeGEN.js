@@ -11,6 +11,7 @@ const {
   product_byID,
   deleteOne,
   update_Data,
+  get_By_category,
 } = require("../Routers/storeRoute");
 
 router.route("/").get(protect, get_All);
@@ -25,5 +26,6 @@ router
 router.route("/shoes").get(get_Shoes);
 router.route("/jeans").get(get_jeans);
 router.route("/tshirt").get(get_Tshirt);
+router.route("/:category").get(get_By_category);
 
 module.exports = router;
