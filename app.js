@@ -59,10 +59,9 @@ app.get("/", (req, res, next) => {
   next(new HandleError(`couldn't find ${req.originalUrl}`, 400));
 }); */
 
-app.get("/hhh", (req, res) => {
-  console.log(req.body);
-  res.status(404).send('thank you ');
-});
+app.get("/test", (req, res) => {
 
+  res.status(404).send(req.query);
+});
 app.use(golobaleEroor);
 app.use(express.static("image"));
